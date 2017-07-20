@@ -1,3 +1,4 @@
+// THIS IS EDWIN'S. SO STUFF IN THIS FILE
 import React from "react";
 import Topic from "./Topic";
 import TaskAdder from "./TaskAdder";
@@ -54,9 +55,34 @@ export default class App extends React.Component {
 
       this.setState({
         topics: topics.map((topic, index) => (
-          index === Number(event.target.value) ? newTopic : topic
+          index === Number(event.target.value) ? newTopic || topic : topic
         ))
-      })
+      });
+    }
+
+    moveUp = event => {
+      const {topics} = this.state;
+      const targetIndex = Number(event.target.value);
+      if (targetIndex > 0) {
+        const newOrder = topics.slice();
+        const target = newOrder.splice(targetIndex, 1);
+        newOrder.splice((targetIndex - 1), 0, target[0]);
+        this.setState({
+          topics: newOrder
+        });
+      }
+    }
+    moveDown = event => {
+      const {topics} = this.state;
+      const targetIndex = Number(event.target.value);
+      if (targetIndex < topics.length) {
+        const newOrder = topics.slice();
+        const target = newOrder.splice(targetIndex, 1);
+        newOrder.splice((targetIndex + 1), 0, target[0]);
+        this.setState({
+          topics: newOrder
+        });
+      }
     }
     // view
     render() {
@@ -77,6 +103,9 @@ export default class App extends React.Component {
               topic={topic}
               onEdit={this.editTopic}
               onDelete={this.removeTopic}
+              moveUp={this.moveUp}
+              moveDown={this.moveDown}
+              lastIndex={topics.length-1}
             />
           )}
           </ul>
